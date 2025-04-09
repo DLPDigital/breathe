@@ -33,7 +33,7 @@ const Home: React.FC = () => {
             // Complete breath cycle
             setCountUp(true);
             // Decrement breath count when cycle completes
-            setBreathsRemaining((prev) => prev - 0.5);
+            setBreathsRemaining((prev) => prev - 1);
             return 0;
           }
           return prevCount - 2;
