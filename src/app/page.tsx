@@ -11,13 +11,11 @@ const Home: React.FC = () => {
   const [isActive, setIsActive] = useState(true);
 
   useEffect(() => {
-    // Stop the timer when no breaths remain
     if (breathsRemaining <= 0) {
       setIsActive(false);
       return;
     }
 
-    // Only run the interval if the exercise is active
     if (!isActive) return;
 
     const timer = setInterval(() => {
@@ -30,9 +28,7 @@ const Home: React.FC = () => {
           return prevCount + 2;
         } else {
           if (prevCount <= 0) {
-            // Complete breath cycle
             setCountUp(true);
-            // Decrement breath count when cycle completes
             setBreathsRemaining((prev) => prev - 1);
             return 0;
           }
@@ -63,19 +59,21 @@ const Home: React.FC = () => {
         style={{ opacity: opacity }}
       ></div>
 
-      <div className="absolute inset-0 flex items-center justify-center">
+      <div className="absolute inset-0 flex flex-col items-center justify-center">
         <h1
           className="text-4xl text-white transition-opacity duration-300 font-serif"
           style={{ opacity: textOpacity }}
         >
           {breathsRemaining > 0 ? displayText : "Session Complete"}
         </h1>
+        <div className="rounded-sm mt-4 w-[200px] h-[8px] bg-linear-to-r from-emerald-700 to-sky-200"></div>
       </div>
 
-      {/* Breath Counter */}
       <div className="absolute bottom-6 right-6">
         <p className="text-white text-xl font-semibold">
-          {breathsRemaining > 0 ? `${breathsRemaining} breaths remaining` : "Complete"}
+          {breathsRemaining > 0
+            ? `${breathsRemaining} breaths remaining`
+            : "Complete"}
         </p>
       </div>
     </div>
