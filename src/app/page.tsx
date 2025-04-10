@@ -62,7 +62,7 @@ const Home: React.FC = () => {
         </p>
       </div>
       {breathsRemaining === 0 && (
-        <div className="absolute bottom-6 left-6">
+        <div className="absolute bottom-6 left-6 max-w-1/2">
           <SmallFooter />
         </div>
       )}
