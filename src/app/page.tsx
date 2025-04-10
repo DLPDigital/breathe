@@ -1,64 +1,49 @@
 "use client";
 
-import React, { useState, useEffect } from "react";
+import React, { useReducer, useEffect } from "react";
+import { initialState, reducer } from "@/hooks/reducer";
+import { useBreathingTimer } from "@/hooks/useBreathingTimer";
+import { useTextTransition } from "@/hooks/useTextTransition";
+import { IntroModal } from "@/components/IntroModal";
+import { SmallFooter } from "@/components/GithubFooter";
 
 const Home: React.FC = () => {
-  const [count, setCount] = useState(0);
-  const [countUp, setCountUp] = useState(true);
-  const [textOpacity, setTextOpacity] = useState(1);
-  const [displayText, setDisplayText] = useState("Breathe In");
-  const [breathsRemaining, setBreathsRemaining] = useState(10);
-  const [isActive, setIsActive] = useState(true);
+  const [state, dispatch] = useReducer(reducer, initialState);
 
-  useEffect(() => {
-    if (breathsRemaining <= 0) {
-      setIsActive(false);
+  const {
+    count,
+    countUp,
+    textOpacity,
+    displayText,
+    breathsRemaining,
+    isActive,
+    showModal,
+    breathInput,
+  } = state;
+
+  useBreathingTimer({ count, countUp, breathsRemaining, isActive }, dispatch);
+  useTextTransition(countUp, dispatch);
+
+  // Form handler
+  const handleStartSession = (e: React.FormEvent) => {
+    e.preventDefault();
+    const breathCount = parseInt(breathInput);
+    if (isNaN(breathCount) || breathCount <= 0) {
+      alert("Please enter a valid number of breaths");
       return;
     }
 
-    if (!isActive) return;
-
-    const timer = setInterval(() => {
-      setCount((prevCount) => {
-        if (countUp) {
-          if (prevCount >= 100) {
-            setCountUp(false);
-            return 100;
-          }
-          return prevCount + 2;
-        } else {
-          if (prevCount <= 0) {
-            setCountUp(true);
-            setBreathsRemaining((prev) => prev - 1);
-            return 0;
-          }
-          return prevCount - 2;
-        }
-      });
-    }, 60);
-
-    return () => clearInterval(timer);
-  }, [countUp, breathsRemaining, isActive]);
-
-  useEffect(() => {
-    setTextOpacity(0);
-
-    const textTimer = setTimeout(() => {
-      setDisplayText(countUp ? "Breathe In" : "Breathe Out");
-      setTextOpacity(1);
-    }, 300);
-
-    return () => clearTimeout(textTimer);
-  }, [countUp]);
+    dispatch({ type: "START_SESSION", payload: breathCount });
+  };
 
   const opacity = count / 100;
+
   return (
     <div className="bg-emerald-700 h-screen relative">
       <div
         className="bg-sky-200 h-screen w-full"
         style={{ opacity: opacity }}
       ></div>
-
       <div className="absolute inset-0 flex flex-col items-center justify-center">
         <h1
           className="text-4xl text-white transition-opacity duration-300 font-serif"
@@ -66,7 +51,7 @@ const Home: React.FC = () => {
         >
           {breathsRemaining > 0 ? displayText : "Session Complete"}
         </h1>
-        <div className="rounded-sm mt-4 w-[200px] h-[8px] bg-linear-to-r from-emerald-700 to-sky-200"></div>
+        <div className="rounded-sm mt-4 w-[200px] h-[8px] bg-gradient-to-r from-emerald-700 to-sky-200"></div>
       </div>
 
       <div className="absolute bottom-6 right-6">
@@ -76,6 +61,19 @@ const Home: React.FC = () => {
             : "Complete"}
         </p>
       </div>
+      {breathsRemaining === 0 && (
+        <div className="absolute bottom-6 left-6">
+          <SmallFooter />
+        </div>
+      )}
+
+      {showModal && (
+        <IntroModal
+          handleStartSession={handleStartSession}
+          breathInput={breathInput}
+          dispatch={dispatch}
+        />
+      )}
     </div>
   );
 };
