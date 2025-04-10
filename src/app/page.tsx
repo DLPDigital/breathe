@@ -1,6 +1,6 @@
 "use client";
 
-import React, { useReducer, useEffect } from "react";
+import React, { useReducer } from "react";
 import { initialState, reducer } from "@/hooks/reducer";
 import { useBreathingTimer } from "@/hooks/useBreathingTimer";
 import { useTextTransition } from "@/hooks/useTextTransition";
