@@ -2,7 +2,7 @@
 
 import React from "react";
 import { Action } from "@/hooks/reducer";
-import { SmallFooter } from "./GithubFooter";
+import { SmallFooter } from "../GithubFooter";
 
 type Props = {
   handleStartSession: (e: React.FormEvent) => void;
@@ -21,7 +21,7 @@ export const IntroModal: React.FC<Props> = ({
         <h2 className="text-2xl font-bold mb-4 text-emerald-700">
           Start a Breathing Session
         </h2>
-        <form onSubmit={handleStartSession}>
+        <form onSubmit={handleStartSession} data-testid="breath-form">
           <div className="mb-4">
             <label className="block text-gray-700 mb-2" htmlFor="breaths">
               How many breaths would you like to take?
