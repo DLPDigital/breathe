@@ -6,6 +6,6 @@ module.exports = {
   },
   testMatch: ['**/__tests__/**/*.test.(ts|tsx)'],
   transform: {
-    '^.+\\.(ts|tsx)$': 'babel-jest'
+    '^.+\\.(ts|tsx)$': ['babel-jest', { configFile: './babel.config.test.js' }]
   }
 };
